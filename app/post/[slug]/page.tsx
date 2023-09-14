@@ -2,6 +2,27 @@ import { Post, SETTINGS } from '@/utils/settings'
 import { CategoryBadges } from '@/components/CategoryBadges'
 import { notFound } from 'next/navigation'
 import { ImageWithFallback } from '@/components/ImageWithFallback'
+import { Metadata } from 'next'
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string }
+}): Promise<Metadata> {
+  const res = await fetch(`${SETTINGS.root}/api/posts/${params.slug}`)
+  if (res.status === 404) return notFound()
+  if (!res.ok) throw new Error('An error has occurred')
+
+  const post = (await res.json()) as Post
+
+  return {
+    title: post.title,
+    description: post.excerpt,
+    openGraph: {
+      images: [post.imageUrl],
+    },
+  }
+}
 
 export default async function Post({ params }: { params: { slug: string } }) {
   const res = await fetch(`${SETTINGS.root}/api/posts/${params.slug}`)
