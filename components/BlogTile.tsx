@@ -5,7 +5,7 @@ import { CategoryBadges } from '@/components/CategoryBadges'
 
 export const BlogTile = ({ post }: { post: Post }) => (
   <Link key={post.id} href={`/post/${post.slug}`} className="block">
-    <article className="transform transition hover:-translate-y-1 cursor-pointer shadow rounded-lg overflow-clip h-full">
+    <article className="transform transition hover:-translate-y-1 cursor-pointer shadow-xl rounded-lg overflow-clip h-full bg-white">
       <figure className="w-full h-36 relative">
         <Image
           className="absolute w-full h-full left-0 top-0 object-cover"

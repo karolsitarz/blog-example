@@ -28,28 +28,36 @@ export const SearchForm = ({ categories }: { categories: Category[] }) => {
   }
 
   return (
-    <form onSubmit={handleFormSubmit} className="flex gap-2">
+    <form
+      onSubmit={handleFormSubmit}
+      className="flex flex-col sm:flex-row gap-2 rounded-xl bg-white p-2"
+    >
       <input
         type="search"
         title="Search"
         placeholder="Search for posts..."
-        className="px-2 py-1 rounded-lg border-2 border-gray-200 bg-white focus:border-gray-400 transition outline-0 ml-auto"
+        className="px-2 py-1 rounded-lg border-2 border-gray-200 bg-white focus:border-gray-400 transition outline-0 ml-auto w-full sm:w-auto"
         name="search"
         defaultValue={searchParams.get('q') || ''}
       />
-      <select
-        name="category"
-        title="Category"
-        className="px-2 py-1 rounded-lg border-2 border-gray-200 bg-white focus:border-gray-400 transition outline-0"
-        defaultValue={searchParams.get('category') || ''}
-      >
-        <option value="">None</option>
-        {categories.map((category) => (
-          <option key={category.id} value={category.slug}>
-            {category.name}
-          </option>
-        ))}
-      </select>
+      <label className="rounded-lg border-2 border-gray-200 bg-white focus-within::border-gray-400 transition relative">
+        <span className="absolute top-0.5 left-2.5 text-xs font-bold text-slate-400">
+          Category
+        </span>
+        <select
+          name="category"
+          title="Category"
+          className="outline-0 w-full bg-transparent pl-1.5 pr-3 pb-0.5 pt-3"
+          defaultValue={searchParams.get('category') || ''}
+        >
+          <option value="">None</option>
+          {categories.map((category) => (
+            <option key={category.id} value={category.slug}>
+              {category.name}
+            </option>
+          ))}
+        </select>
+      </label>
       <button className="px-3 py-1.5 rounded-lg bg-slate-600 text-white font-bold">
         Search
       </button>
