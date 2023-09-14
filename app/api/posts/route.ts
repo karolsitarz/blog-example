@@ -5,9 +5,9 @@ import { posts } from '@/utils/data.json'
 import { mapPostCategories } from '@/app/api/posts/[slug]/route'
 
 const paramSchema = {
-  page: z.coerce.number().gte(1).finite().safe().optional().default(1),
-  query: z.coerce.string().trim().optional(),
-  category: z.coerce.string().trim().optional(),
+  page: z.coerce.number().gte(1).finite().safe().optional().default(1).catch(1),
+  query: z.coerce.string().trim().optional().catch(''),
+  category: z.coerce.string().trim().optional().catch(''),
 }
 
 const getParamGenerator = (request: NextRequest) => (name: string) => {
