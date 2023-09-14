@@ -49,6 +49,7 @@ export const SearchForm = ({ categories }: { categories: Category[] }) => {
         defaultValue={searchParams.get('q') || ''}
         value={searchInput}
         onChange={(e) => setSearchInput(e.target.value)}
+        aria-label="Post search field"
       />
       <label className="rounded-lg border-2 border-gray-200 bg-white focus-within::border-gray-400 transition relative">
         <span className="absolute top-0.5 left-2.5 text-xs font-bold text-slate-400">
@@ -60,6 +61,7 @@ export const SearchForm = ({ categories }: { categories: Category[] }) => {
           className="outline-0 w-full bg-transparent pl-1.5 pr-3 pb-0.5 pt-3"
           value={categoryInput}
           onChange={(e) => setCategoryInput(e.target.value)}
+          aria-label="Post category filter selector"
         >
           <option value="">None</option>
           {categories.map((category) => (
