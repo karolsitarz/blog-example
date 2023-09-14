@@ -1,24 +1,32 @@
 'use client'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Category, SETTINGS } from '@/utils/settings'
+import { useEffect, useState } from 'react'
 
 export const SearchForm = ({ categories }: { categories: Category[] }) => {
   const router = useRouter()
   const searchParams = useSearchParams()
 
+  const [searchInput, setSearchInput] = useState(searchParams.get('q') || '')
+  const [categoryInput, setCategoryInput] = useState(
+    searchParams.get('category') || '',
+  )
+
+  // make sure the inputs are aligned with query parameters
+  useEffect(() => {
+    setSearchInput(searchParams.get('q') || '')
+    setCategoryInput(searchParams.get('category') || '')
+  }, [searchParams])
+
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const params = new URLSearchParams(Array.from(searchParams.entries()))
 
-    const formData = new FormData(e.currentTarget)
-    const query = ((formData.get('search') || '') as string).trim()
-    const category = ((formData.get('category') || '') as string).trim()
+    if (!searchInput) params.delete('q')
+    else params.set('q', searchInput)
 
-    if (!query) params.delete('q')
-    else params.set('q', query)
-
-    if (!category) params.delete('category')
-    else params.set('category', category)
+    if (!categoryInput) params.delete('category')
+    else params.set('category', categoryInput)
 
     params.delete('page')
 
@@ -39,6 +47,8 @@ export const SearchForm = ({ categories }: { categories: Category[] }) => {
         className="px-2 py-1 rounded-lg border-2 border-gray-200 bg-white focus:border-gray-400 transition outline-0 ml-auto w-full sm:w-auto"
         name="search"
         defaultValue={searchParams.get('q') || ''}
+        value={searchInput}
+        onChange={(e) => setSearchInput(e.target.value)}
       />
       <label className="rounded-lg border-2 border-gray-200 bg-white focus-within::border-gray-400 transition relative">
         <span className="absolute top-0.5 left-2.5 text-xs font-bold text-slate-400">
@@ -48,7 +58,8 @@ export const SearchForm = ({ categories }: { categories: Category[] }) => {
           name="category"
           title="Category"
           className="outline-0 w-full bg-transparent pl-1.5 pr-3 pb-0.5 pt-3"
-          defaultValue={searchParams.get('category') || ''}
+          value={categoryInput}
+          onChange={(e) => setCategoryInput(e.target.value)}
         >
           <option value="">None</option>
           {categories.map((category) => (
