@@ -1,8 +1,8 @@
 import { Post, SETTINGS } from '@/utils/settings'
 import { BlogTile } from '@/components/BlogTile'
-import { SearchForm } from '@/app/SearchForm'
+import { SearchForm } from '@/components/SearchForm'
 import { categories } from '@/utils/data.json'
-import { Pagination } from '@/app/Pagination'
+import { Pagination } from '@/components/Pagination'
 
 const getQueryString = (searchParams?: Record<string, string>) => {
   if (!searchParams) return ''
