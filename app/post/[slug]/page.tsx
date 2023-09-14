@@ -1,11 +1,14 @@
 import { Post, SETTINGS } from '@/utils/settings'
 import Image from 'next/image'
 import { CategoryBadges } from '@/components/CategoryBadges'
+import { notFound } from 'next/navigation'
 
 export default async function Post({ params }: { params: { slug: string } }) {
-  const post = await fetch(
-    `${SETTINGS.root}/api/posts/${params.slug}`,
-  ).then<Post>((res) => res.json())
+  const res = await fetch(`${SETTINGS.root}/api/posts/${params.slug}`)
+  if (res.status === 404) return notFound()
+
+  if (!res.ok) throw new Error('')
+  const post = (await res.json()) as Post
 
   return (
     <main className="min-h-full w-full max-w-prose mx-auto px-4 sm:px-0">
