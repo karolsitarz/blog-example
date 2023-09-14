@@ -2,7 +2,7 @@ import { Post, SETTINGS } from '@/utils/settings'
 import { BlogTile } from '@/app/_components/BlogTile'
 import { SearchForm } from '@/app/_components/SearchForm'
 import { categories } from '@/utils/data.json'
-import { Pagination } from '@/app/_components/Pagination'
+import Link from 'next/link'
 
 const getQueryString = (searchParams?: Record<string, string>) => {
   if (!searchParams) return ''
@@ -14,6 +14,12 @@ const getQueryString = (searchParams?: Record<string, string>) => {
   }
   const search = params.toString()
   return search ? `?${search}` : ''
+}
+
+const getPageQueryString = (page: number, queryString: string) => {
+  const params = new URLSearchParams(queryString)
+  params.set('page', page.toString())
+  return params.toString()
 }
 
 export default async function Home({
@@ -40,7 +46,24 @@ export default async function Home({
           <BlogTile key={post.id} post={post} />
         ))}
       </section>
-      <Pagination pages={pages} page={page} />
+      <div className="flex">
+        {page > 1 && (
+          <Link
+            href={'?' + getPageQueryString(page - 1, queryString)}
+            className="px-4 py-1.5 rounded-lg bg-slate-600 text-white font-bol mr-auto"
+          >
+            Previous page
+          </Link>
+        )}
+        {page < pages && (
+          <Link
+            href={'?' + getPageQueryString(page + 1, queryString)}
+            className="px-4 py-1.5 rounded-lg bg-slate-600 text-white font-bol ml-auto"
+          >
+            Next page
+          </Link>
+        )}
+      </div>
     </main>
   )
 }
