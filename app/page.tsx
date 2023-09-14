@@ -41,11 +41,19 @@ export default async function Home({
   return (
     <main className="min-h-full w-full max-w-5xl mx-auto p-6 flex flex-col gap-6">
       <SearchForm categories={categories} />
-      <section className="w-full gap-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-        {posts.map((post) => (
-          <BlogTile key={post.id} post={post} />
-        ))}
-      </section>
+
+      {!posts?.length ? (
+        <div className="text-gray-500 text-center text-xl mx-auto">
+          No posts with given parameters
+        </div>
+      ) : (
+        <section className="w-full gap-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+          {posts.map((post) => (
+            <BlogTile key={post.id} post={post} />
+          ))}
+        </section>
+      )}
+
       <div className="flex">
         {page > 1 && (
           <Link
