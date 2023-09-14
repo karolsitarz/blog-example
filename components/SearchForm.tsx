@@ -58,7 +58,7 @@ export const SearchForm = ({ categories }: { categories: Category[] }) => {
           ))}
         </select>
       </label>
-      <button className="px-3 py-1.5 rounded-lg bg-slate-600 text-white font-bold">
+      <button className="px-4 py-1.5 rounded-lg bg-slate-600 text-white font-bold">
         Search
       </button>
     </form>

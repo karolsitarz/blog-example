@@ -2,17 +2,24 @@ import { Post, SETTINGS } from '@/utils/settings'
 import Image from 'next/image'
 import { CategoryBadges } from '@/components/CategoryBadges'
 import { notFound } from 'next/navigation'
+import placeholder from '@/assets/placeholder.jpg'
 
 export default async function Post({ params }: { params: { slug: string } }) {
   const res = await fetch(`${SETTINGS.root}/api/posts/${params.slug}`)
   if (res.status === 404) return notFound()
+  if (!res.ok) throw new Error('An error has occurred')
 
-  if (!res.ok) throw new Error('')
   const post = (await res.json()) as Post
 
   return (
     <main className="min-h-full w-full max-w-prose mx-auto px-4 sm:px-0">
       <figure className="w-full h-48 sm:h-52 md:h-64 relative rounded-xl overflow-clip mt-4">
+        <Image
+          src={placeholder}
+          alt="Post thumbnail placeholder"
+          fill
+          className="absolute w-full h-full left-0 top-0 object-cover"
+        />
         <Image
           className="absolute w-full h-full left-0 top-0 object-cover"
           src={post.imageUrl}

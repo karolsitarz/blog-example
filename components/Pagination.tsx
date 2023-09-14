@@ -30,7 +30,7 @@ export const Pagination = ({
       {page > 1 && (
         <Link
           href={getLink(page - 1)}
-          className="px-3 py-1.5 rounded-lg bg-slate-600 text-white font-bol mr-auto"
+          className="px-4 py-1.5 rounded-lg bg-slate-600 text-white font-bol mr-auto"
         >
           Previous page
         </Link>
@@ -38,7 +38,7 @@ export const Pagination = ({
       {page < pages && (
         <Link
           href={getLink(page + 1)}
-          className="px-3 py-1.5 rounded-lg bg-slate-600 text-white font-bol ml-auto"
+          className="px-4 py-1.5 rounded-lg bg-slate-600 text-white font-bol ml-auto"
         >
           Next page
         </Link>

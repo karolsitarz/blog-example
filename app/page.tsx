@@ -23,13 +23,14 @@ export default async function Home({
 }) {
   const queryString = getQueryString(searchParams)
 
-  const { posts, page, pages } = await fetch(
-    `${SETTINGS.root}/api/posts${queryString}`,
-  ).then<{
+  const res = await fetch(`${SETTINGS.root}/api/posts${queryString}`)
+  if (!res.ok) throw new Error('An error has occurred')
+
+  const { posts, page, pages } = (await res.json()) as {
     posts: Post[]
     page: number
     pages: number
-  }>((res) => res.json())
+  }
 
   return (
     <main className="min-h-full w-full max-w-5xl mx-auto p-6 flex flex-col gap-6">
