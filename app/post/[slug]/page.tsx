@@ -4,17 +4,20 @@ import { notFound } from 'next/navigation'
 import { ImageWithFallback } from '@/components/ImageWithFallback'
 import { Metadata } from 'next'
 
+const getPost = async (slug: string) => {
+  const res = await fetch(`${SETTINGS.root}/api/posts/${slug}`)
+  if (res.status === 404) return notFound()
+  if (!res.ok) throw new Error('An error has occurred')
+
+  return (await res.json()) as Post
+}
+
 export async function generateMetadata({
   params,
 }: {
   params: { slug: string }
 }): Promise<Metadata> {
-  const res = await fetch(`${SETTINGS.root}/api/posts/${params.slug}`)
-  if (res.status === 404) return notFound()
-  if (!res.ok) throw new Error('An error has occurred')
-
-  const post = (await res.json()) as Post
-
+  const post = await getPost(params.slug)
   return {
     title: post.title,
     description: post.excerpt,
@@ -25,11 +28,7 @@ export async function generateMetadata({
 }
 
 export default async function Post({ params }: { params: { slug: string } }) {
-  const res = await fetch(`${SETTINGS.root}/api/posts/${params.slug}`)
-  if (res.status === 404) return notFound()
-  if (!res.ok) throw new Error('An error has occurred')
-
-  const post = (await res.json()) as Post
+  const post = await getPost(params.slug)
 
   return (
     <main className="min-h-full w-full max-w-prose mx-auto px-4 sm:px-0">
