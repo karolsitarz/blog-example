@@ -1,14 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z, ZodError } from 'zod'
 
-import { posts, categories } from '@/utils/data.json'
+import { posts } from '@/utils/data.json'
 import { mapPostCategories } from '@/app/api/posts/[slug]/route'
 
 const paramSchema = {
-  skip: z.number().gte(0).finite().safe().optional().default(0),
-  take: z.number().gte(1).finite().safe().optional().default(20),
-  query: z.string().trim().optional(),
-  categories: z.array(z.number().gte(0)).optional(),
+  page: z.coerce.number().gte(1).finite().safe().optional().default(1),
+  query: z.coerce.string().trim().optional(),
+  category: z.coerce.string().trim().optional(),
 }
 
 const getParamGenerator = (request: NextRequest) => (name: string) => {
@@ -16,35 +15,33 @@ const getParamGenerator = (request: NextRequest) => (name: string) => {
   return param == null ? undefined : param
 }
 
+const PAGE_SIZE = 18
+
 export async function GET(request: NextRequest) {
   const getParam = getParamGenerator(request)
   try {
-    const categoriesQuery = paramSchema.categories.parse(getParam('categories'))
+    const category = paramSchema.category.parse(getParam('category'))
     const query = paramSchema.query.parse(getParam('q'))
-    const skip = paramSchema.skip.parse(getParam('skip'))
-    const take = paramSchema.take.parse(getParam('take'))
+    const page = paramSchema.page.parse(getParam('page'))
 
-    let data = posts
-    if (categoriesQuery) {
-      data = data.filter((post) =>
-        post.categories.some((category) => categoriesQuery.includes(category)),
+    let list = posts.map(mapPostCategories)
+    if (category) {
+      list = list.filter((post) =>
+        post.categories.some(({ slug }) => slug === category),
       )
     }
     if (query) {
-      data = data.filter((post) =>
+      list = list.filter((post) =>
         post.title.toLowerCase().includes(query.toLowerCase()),
       )
     }
 
-    const sliced = data.slice(skip, skip + take)
-    // map categories
-    const mappedPosts = sliced.map(mapPostCategories)
+    const skip = (page - 1) * PAGE_SIZE
 
     return NextResponse.json({
-      posts: mappedPosts,
-      skip,
-      take,
-      length: data.length,
+      posts: list.slice(skip, skip + PAGE_SIZE),
+      page,
+      pages: Math.floor(list.length / PAGE_SIZE) + 1,
     })
   } catch (e: unknown) {
     const { errors } = e as { errors: ZodError[] }

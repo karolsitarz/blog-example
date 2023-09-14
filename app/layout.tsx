@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import { Poppins } from 'next/font/google'
 import Link from 'next/link'
 
-const poppins = Poppins({ subsets: ['latin'], weight: ['500', '800'] })
+const poppins = Poppins({ subsets: ['latin'], weight: ['500', '700'] })
 
 export const metadata: Metadata = {
   title: 'Blog Example',
